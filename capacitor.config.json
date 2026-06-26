@@ -1,9 +1,0 @@
-{
-  "appId": "com.lectorrsvp.app",
-  "appName": "Lector RSVP",
-  "webDir": "www",
-  "bundledWebRuntime": false,
-  "android": {
-    "allowMixedContent": false
-  }
-}
