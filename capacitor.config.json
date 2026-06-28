@@ -1,0 +1,8 @@
+{
+  "appId": "com.rezlector.app",
+  "appName": "Rez Lector",
+  "webDir": "www",
+  "android": {
+    "allowMixedContent": false
+  }
+}
