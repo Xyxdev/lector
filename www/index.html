@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rez Lector</title>
+<meta id="themeColorMeta" name="theme-color" content="#EDE6D6">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<div class="app">
+
+  <div class="brandRow">
+    <div class="brandLeft">
+      <div class="eyebrow" data-i18n="appName">Rez Lector</div>
+    </div>
+    <div class="headerActions">
+      <div id="streakPill" class="streakPill hidden"><span class="flame">🔥</span><span id="streakValue">0</span></div>
+      <div class="langSwitch" id="langSwitch">
+        <button type="button" data-lang="en">EN</button>
+        <button type="button" data-lang="es">ES</button>
+      </div>
+      <div class="themeSwitch" id="themeSwitch" aria-label="Theme">
+        <button type="button" data-theme-choice="system" data-i18n-aria="themeSystemAria" aria-label="Use system theme">A</button>
+        <button type="button" data-theme-choice="light" data-i18n-aria="themeLightAria" aria-label="Use light theme">L</button>
+        <button type="button" data-theme-choice="dark" data-i18n-aria="themeDarkAria" aria-label="Use dark theme">D</button>
+      </div>
+      <button id="aboutBtn" class="aboutBtn" data-i18n-aria="aboutAria" aria-label="About & privacy">ⓘ</button>
+    </div>
+  </div>
+
+  <!-- ===================== PANTALLA: BIBLIOTECA ===================== -->
+  <div id="libraryScreen" class="library-screen">
+    <div class="library-header">
+      <h1 class="lede" data-i18n="libraryTitle">Your library</h1>
+      <button id="addBookBtn" class="addBookBtn" data-i18n-aria="addBookAria" aria-label="Add book">+</button>
+    </div>
+
+    <div id="statsArea"></div>
+
+    <div id="libraryStatus" aria-live="polite"></div>
+
+    <div id="libraryEmpty" class="libraryEmpty hidden">
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+        </svg>
+      </div>
+      <div class="msg" data-i18n="emptyTitle">Read at the speed of your mind</div>
+      <div class="sub" data-i18n="emptySub">Upload an .epub or .txt file…</div>
+    </div>
+
+    <div id="shelf" class="shelf hidden"></div>
+
+    <div id="libraryAdSlot" class="adSlot hidden">
+      <span class="adTag">AD</span>
+      <span data-i18n="adPlaceholder">Ad space</span>
+    </div>
+
+    <input type="file" id="fileInput" accept=".epub,application/epub+zip,.txt,text/plain">
+  </div>
+
+  <!-- ===================== PANTALLA: LECTOR ===================== -->
+  <div id="readerScreen" class="reader-screen hidden">
+    <div class="topbar">
+      <button id="backBtn" class="backBtn" data-i18n-aria="backAria" aria-label="Back to library">←</button>
+      <div class="titleBlock">
+        <div class="eyebrow" data-i18n="reading">Reading</div>
+        <div id="bookTitle" class="booktitle"></div>
+      </div>
+      <select id="chapterSelect"></select>
+    </div>
+
+    <div id="stage" class="stage" data-i18n-aria="stageHint" aria-label="Tap to pause or resume">
+      <div class="guide-tick top"></div>
+      <div class="wordrow" id="wordrow" data-group-size="1">
+        <span id="wordLeft"></span><span id="wordPivot">·</span><span id="wordRight"></span>
+      </div>
+      <div id="tickerTrack" class="tickerTrack" aria-hidden="true"></div>
+      <div class="landscapeHud" aria-hidden="true">
+        <span id="landscapeProgressText">0%</span>
+        <span id="landscapeRateText">320 ppm</span>
+      </div>
+      <div class="landscapeProgressRail" aria-hidden="true">
+        <div id="landscapeProgressFill" class="landscapeProgressFill"></div>
+      </div>
+      <div class="guide-tick bottom"></div>
+      <div class="stage-hint" data-i18n="stageHint">tap to pause</div>
+      <div id="savedBadge" class="savedBadge hidden" aria-live="polite" data-i18n="progressSaved">progress saved</div>
+      <div id="finishedBadge" class="finishedBadge hidden" aria-live="polite" data-i18n="finished">finished</div>
+      <button id="landscapePlayBtn" class="landscapePlayBtn" type="button" data-i18n-aria="playAria" aria-label="Play"></button>
+    </div>
+
+    <div class="sidePanel">
+    <div id="resumeBanner" class="resumeBanner hidden">
+      <span id="resumeText"></span>
+      <div class="resumeActions">
+        <button id="resumeBtn" class="resumeBtnPrimary" data-i18n="resumeContinue">Continue</button>
+        <button id="restartBtn" class="resumeBtnGhost" data-i18n="resumeRestart">Start over</button>
+      </div>
+    </div>
+
+    <div id="progressBar" class="progress" role="slider" tabindex="0"
+         aria-label="Reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+      <div id="progressFill" class="progress-fill"></div>
+    </div>
+    <div id="progressLabel" class="progress-label">0 / 0</div>
+
+    <div class="controls">
+      <button id="sentenceBackBtn" class="ctrl-btn secondary" data-i18n-aria="sentenceBack" aria-label="Back to start of sentence" data-i18n="sentenceBack">⟲ sentence</button>
+      <button id="prevBtn" class="ctrl-btn secondary" data-i18n-aria="stepBack" aria-label="Back 10 words" data-i18n="stepBack">−10</button>
+      <button id="playBtn" data-i18n-aria="playAria" aria-label="Play">▶</button>
+      <button id="nextBtn" class="ctrl-btn secondary" data-i18n-aria="stepFwd" aria-label="Forward 10 words" data-i18n="stepFwd">+10</button>
+    </div>
+
+    <div id="readerAdSlot" class="adSlot adSlotSmall hidden">
+      <span class="adTag">AD</span>
+      <span data-i18n="adPlaceholder">Ad space</span>
+    </div>
+
+    <div class="speedpanel">
+      <div class="row1">
+        <span class="label" data-i18n="speedLabel">Base speed</span>
+        <span class="ppmval"><span id="ppmValue">320</span> ppm</span>
+      </div>
+      <div class="sliderWrap">
+        <input type="range" id="ppmSlider" min="120" max="700" step="10" value="320">
+        <div id="sliderLockOverlay" class="sliderLockOverlay hidden"><span class="lockIcon">🔒</span></div>
+      </div>
+      <div id="speedCapNote" class="speedCapNote hidden" data-i18n="speedCapNote">🔒 Premium unlocks unlimited speed</div>
+
+      <div class="groupRow">
+        <button class="groupBtn active" data-group="1">1 word</button>
+        <button class="groupBtn" data-group="2">2 words</button>
+        <button class="groupBtn" data-group="3">3 words</button>
+      </div>
+
+      <div class="toggle-row">
+        <span><span data-i18n="adaptiveLabel">Adaptive mode · live pace</span> <span class="liverate" id="liveRate">320</span> ppm</span>
+        <label class="switch">
+          <input type="checkbox" id="adaptiveToggle" checked>
+          <span class="slider-pill"></span>
+        </label>
+      </div>
+    </div>
+
+    <div class="footnote" data-i18n="footnote">space: pause · ← →: skip 10 words · ↑: previous sentence</div>
+    </div>
+  </div>
+
+  <div id="modalRoot"></div>
+  <div id="premiumRoot"></div>
+  <div id="adRoot"></div>
+  <div id="aboutRoot"></div>
+
+</div>
+
+<script src="lib/jszip.min.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/parsers/epub.js"></script>
+<script src="js/parsers/txt.js"></script>
+<script src="js/rsvp-engine.js"></script>
+<script src="js/premium.js"></script>
+<script src="js/ads.js"></script>
+<script src="js/about.js"></script>
+<script src="js/library.js"></script>
+<script src="js/reader.js"></script>
+<script src="js/app.js"></script>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js').catch(() => {
+        // Si falla el registro (por ej. corriendo dentro del WebView de
+        // Capacitor sin soporte de SW), la app sigue funcionando igual,
+        // simplemente sin cache offline extra.
+      });
+    });
+  }
+</script>
+
+</body>
+</html>
