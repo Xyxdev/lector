@@ -1,39 +1,50 @@
 # Google Play Billing Setup
 
-This project is currently a vanilla HTML/CSS/JavaScript app packaged with Capacitor 8. There is no committed `android/` Gradle project yet. The APK source does not ship a JavaScript Billing bridge until the native Capacitor plugin exists, because Windows Defender flagged the temporary web bridge inside debug APK artifacts.
+Rez Lector is a vanilla HTML/CSS/JavaScript app packaged with Capacitor 8.
+This repository now includes a generated Android project in `android/` and a
+native Capacitor plugin for Google Play Billing.
 
-## Product ID
+## Product
 
-The subscription Product ID used by the app is:
+Subscription Product ID:
 
 ```text
 premium_monthly
 ```
 
-When the native plugin is integrated, keep the same ID in the Android plugin/template and any bridge code you add.
+The same ID is used in:
 
-## Current App Integration
+- `www/js/billing.js`
+- `android/app/src/main/java/com/rezlector/app/billing/GooglePlayBillingPlugin.kt`
+- Play Console subscription setup
 
-The paywall is prepared to call a global `Billing` bridge when it exists. Until the native plugin is installed, it shows a clear "Google Play Billing unavailable" message instead of unlocking premium locally.
+## Native Plugin
 
-- `Billing.refreshEntitlement()` queries active Google Play purchases.
-- `Billing.purchasePremium()` launches the purchase flow.
-- `Billing.restorePurchases()` restores active subscriptions.
-- `Billing.openManageSubscriptions()` opens Google Play subscription management.
+Capacitor plugin name:
 
-Local storage is only a cache for UX. It is not treated as the source of truth.
-
-For serious production, validate `purchaseToken` on a backend using the Google Play Developer API. The client-side entitlement check is useful, but server validation is stronger.
-
-## Native Plugin Contract
-
-The JavaScript layer expects this Capacitor plugin:
-
-```js
-window.Capacitor.Plugins.GooglePlayBilling
+```text
+GooglePlayBilling
 ```
 
-Required methods:
+Android implementation:
+
+```text
+android/app/src/main/java/com/rezlector/app/billing/GooglePlayBillingPlugin.kt
+```
+
+Registered from:
+
+```text
+android/app/src/main/java/com/rezlector/app/MainActivity.java
+```
+
+Gradle dependency:
+
+```gradle
+implementation "com.android.billingclient:billing-ktx:9.1.0"
+```
+
+The plugin exposes:
 
 ```ts
 initialize({ productId })
@@ -43,127 +54,99 @@ purchase({ productId, offerToken })
 openManageSubscriptions({ productId })
 ```
 
-Expected product details response:
+It handles successful purchases, user cancellation, missing products, already
+owned items, restore/query, acknowledgement, and pending purchases. Pending,
+cancelled, invalid, or non-matching purchases do not unlock Premium.
 
-```json
-{
-  "productId": "premium_monthly",
-  "formattedPrice": "$4.99",
-  "billingPeriod": "month",
-  "offerToken": "..."
-}
+## JavaScript Bridge
+
+The web bridge lives at:
+
+```text
+www/js/billing.js
 ```
 
-Expected entitlement response:
+It exposes `window.Billing`, calls `window.Capacitor.Plugins.GooglePlayBilling`,
+and only writes Premium state through:
 
-```json
-{
-  "premium": true,
-  "productId": "premium_monthly",
-  "purchaseToken": "...",
-  "acknowledged": true,
-  "message": "Subscription active."
-}
+```js
+Storage.setPremiumFromBilling(true_or_false)
 ```
 
-## Create Android Project
+Local storage is only a UX cache. It is not a strong entitlement source.
+Production apps should validate `purchaseToken`, `productId`, and `packageName`
+on a backend using the Google Play Developer API.
 
-From this project folder:
+## Build Commands
+
+Install dependencies:
 
 ```bash
 npm install
-npx cap add android
-npx cap sync android
 ```
 
-Then implement the native Capacitor plugin in the generated Android project using the official dependency:
+Sync web assets and native project:
 
-```gradle
-implementation "com.android.billingclient:billing-ktx:<latest-stable-compatible-version>"
+```bash
+npm run android:sync
 ```
 
-Use the latest stable Google Play Billing version compatible with the generated Gradle/AGP setup.
+Build debug APK:
 
-This package includes a Kotlin starting point here:
-
-```text
-android-billing-template/GooglePlayBillingPlugin.kt
+```bash
+npm run android:debug
 ```
 
-After `android/` exists, copy it into a package such as:
+Build release AAB:
 
-```text
-android/app/src/main/java/com/rezlector/app/billing/GooglePlayBillingPlugin.kt
+```bash
+npm run android:bundle
 ```
 
-Then register the plugin from the generated MainActivity if Capacitor does not auto-discover it. The plugin uses the native name expected by the web app:
+Open Android Studio:
 
-```text
-GooglePlayBilling
+```bash
+npm run android:open
 ```
 
-## Play Console Subscription Setup
+## Release Signing
 
-1. Open Google Play Console.
-2. Create the app with package name from `capacitor.config.json`:
+Do not commit keystores or passwords.
 
-```text
-com.rezlector.app
+Create a local keystore:
+
+```bash
+keytool -genkeypair -v -keystore rez-lector-release.jks -alias rezlector -keyalg RSA -keysize 2048 -validity 10000
 ```
 
+Create `android/keystore.properties` locally:
+
+```properties
+storeFile=../rez-lector-release.jks
+storePassword=YOUR_STORE_PASSWORD
+keyAlias=rezlector
+keyPassword=YOUR_KEY_PASSWORD
+```
+
+The repo ignores `keystore.properties`, `.jks`, and `.keystore` files.
+
+## Play Console Subscription
+
+1. Create the app with package `com.rezlector.app`.
+2. Upload an AAB to Internal Testing.
 3. Go to Monetize > Products > Subscriptions.
-4. Create a subscription with Product ID:
-
-```text
-premium_monthly
-```
-
-5. Create an active monthly base plan.
-6. Add price and countries.
+4. Create subscription product `premium_monthly`.
+5. Create and activate a monthly base plan.
+6. Configure price and countries.
 7. Activate the subscription and base plan.
-8. Make sure the app is uploaded to Internal Testing before testing Billing.
+8. Install the app from Google Play Internal Testing with a tester account.
+9. Confirm the paywall loads the Google Play price.
+10. Test purchase success, cancellation, restore, pending state, and no-premium state.
 
-## Internal Testing
+## Known Production TODO
 
-1. Generate a signed AAB.
-2. Upload it to Internal Testing.
-3. Add tester Gmail accounts.
-4. Publish the internal testing release.
-5. Open the opt-in test link with the tester account.
-6. Install the app from Google Play, not from a direct APK, when testing real purchases.
-7. Open the premium paywall.
-8. Confirm the price is loaded from Google Play.
-9. Tap Activate Premium.
-10. Test successful purchase, cancelled purchase, pending purchase if available, and restore.
-
-## Restore Purchases
-
-The Restore purchase button calls `queryPurchasesAsync` through the native plugin. It should:
-
-- Find active subscriptions.
-- Acknowledge purchases when needed.
-- Update premium state if valid.
-- Show a clear message if nothing active is found.
-
-## Manage Subscription
-
-The app opens:
-
-```text
-https://play.google.com/store/account/subscriptions
-```
-
-The native plugin should prefer an Android intent to the same Google Play subscription management screen.
-
-## Backend Validation TODO
-
-Before production at scale, add backend validation:
-
-- Send `purchaseToken`.
-- Send `productId`.
-- Send `packageName`.
-- Send `userId` if the app later adds accounts.
-- Verify with Google Play Developer API.
-- Return entitlement status to the app.
-
-Do not store API secrets in the app.
+- Publish `PRIVACY_POLICY.md` at a public HTTPS URL.
+- Add a real support email to the privacy policy.
+- Configure Play Console subscription `premium_monthly`.
+- Configure release signing locally or in CI without committing secrets.
+- Add backend purchase-token validation before scaling production usage.

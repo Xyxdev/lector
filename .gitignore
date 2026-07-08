@@ -2,9 +2,6 @@
 node_modules/
 www/lib/jszip.min.js
 
-# Proyecto nativo de Android: se regenera desde cero en cada build de CI
-# (ver .github/workflows/build-android.yml), no necesita vivir en el repo.
-android/
 ios/
 
 # Artefactos de build
@@ -12,6 +9,10 @@ ios/
 *.aab
 dist/
 build/
+android/.gradle/
+android/app/build/
+android/app/src/main/assets/public/
+android/app/src/main/assets/capacitor.config.json
 
 # Archivos del sistema operativo / editor
 .DS_Store
@@ -21,3 +22,6 @@ Thumbs.db
 # Variables de entorno / secretos (por si en el futuro se agregan)
 .env
 .env.local
+keystore.properties
+*.jks
+*.keystore

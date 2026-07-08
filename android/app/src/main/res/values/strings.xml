@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Rez Lector</string>
+    <string name="title_activity_main">Rez Lector</string>
+    <string name="package_name">com.rezlector.app</string>
+    <string name="custom_url_scheme">com.rezlector.app</string>
+</resources>

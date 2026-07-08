@@ -1,59 +1,90 @@
 # Play Store Release Checklist
 
-## Build
+## Local Build
 
-- Generate a signed Android App Bundle (AAB).
-- Confirm package name: `com.rezlector.app`.
-- Confirm version code and version name are incremented.
-- Run the app on a physical Android device.
-- Confirm Google Play Billing works only from a Play Store/internal testing install.
+- Run `npm install`.
+- Run `npm test`.
+- Run `npm run android:sync`.
+- Run `npm run android:debug`.
+- Configure release signing locally.
+- Run `npm run android:bundle`.
+- Confirm package name is `com.rezlector.app`.
+- Confirm visible app name is `Rez Lector`.
+- Confirm `versionCode 1` and `versionName 1.0.0` for the first release.
+- Confirm `minSdk 24`, `compileSdk 36`, and `targetSdk 36`.
 
-## Store Listing
+## Release Signing
 
-- Complete app name, short description, and full description.
-- Upload screenshots for phone and tablet if required.
+- Create a local release keystore with `keytool`.
+- Create `android/keystore.properties` locally.
+- Never commit `.jks`, `.keystore`, `keystore.properties`, service accounts, tokens, or passwords.
+- Store release credentials in a secure password manager.
+
+## Play Console App Setup
+
+- Create the Android app in Play Console.
+- Package name: `com.rezlector.app`.
 - Upload app icon and feature graphic.
-- Add privacy policy URL.
+- Add phone screenshots and tablet screenshots if required.
+- Add short description and full description.
+- Add public privacy policy URL.
+- Complete Content Rating.
 - Complete Data Safety.
-- Declare whether the app shows ads.
-- Complete content rating.
-- Select countries and regions.
-- Set pricing and availability.
+- Declare no real ads until an ad SDK is actually integrated.
+- Declare Google Play Billing subscription for digital Premium features.
 
-## Subscription
+## Subscription Setup
 
-- Create subscription product `premium_monthly`.
-- Create and activate a monthly base plan.
-- Configure price and countries.
-- Make sure the product is active before testing.
-- Confirm the paywall shows price and renewal terms from Google Play.
-- Confirm no hardcoded price is displayed in production.
+- Go to Monetize > Products > Subscriptions.
+- Create Product ID `premium_monthly`.
+- Create a monthly base plan.
+- Configure price, countries, and renewal terms.
+- Activate the subscription and base plan.
+- Confirm the product is active before purchase tests.
 
 ## Internal Testing
 
-- Upload signed AAB to Internal Testing.
+- Upload the signed AAB to Internal Testing.
 - Add tester Gmail accounts.
-- Publish internal test release.
-- Send/accept opt-in link.
-- Install from Google Play with tester account.
-- Test purchase success.
-- Test purchase cancellation.
+- Publish the internal test release.
+- Open the opt-in link with a tester account.
+- Install from Google Play, not by side-loading, for real Billing tests.
+- Test user without Premium.
+- Test successful purchase.
+- Test user-cancelled purchase.
+- Test pending purchase if available in your test setup.
 - Test restore purchase.
-- Test subscription cancellation from Google Play.
-- Reopen app and confirm premium is removed after Google reports no active subscription.
-- Test network/Billing unavailable messages.
+- Cancel subscription from Google Play and verify Premium is removed when Google reports no active subscription.
+- Confirm ad placeholders are hidden for Premium.
+- Confirm Premium unlocks more books, speed above 250 ppm, 2-3 word grouping, stats, and accent colors.
 
-## Review Readiness
+## Privacy And Data Safety
 
-- Include reviewer instructions if any premium functionality is blocked.
-- Explain that premium uses Google Play Billing.
-- Confirm digital subscription uses Google Play Billing only.
-- Confirm there is no external payment method.
-- Confirm privacy policy mentions local storage and purchases.
-- Confirm ads declaration matches app behavior.
+- Publish `PRIVACY_POLICY.md` at a public HTTPS URL.
+- Replace the TODO support email before production.
+- Data Safety should match the app: no analytics, no tracking SDKs, no real ads, local book storage only, Google Play Billing for purchases.
+- Explain that Google Play processes payments and the app may receive `productId`, `purchaseToken`, and `packageName`.
+- Confirm no external payment links or external subscription purchase flows exist.
 
-## Final Security Notes
+## Manifest And Permissions
 
-- Do not trust local storage as the only entitlement source.
-- Validate `purchaseToken` on a backend for stronger production security.
-- Do not commit service account keys or API secrets.
+- Keep `INTERNET` for Billing/web support.
+- Keep `VIBRATE` only because the app uses tap feedback.
+- Do not add storage, location, camera, microphone, contacts, or dangerous permissions.
+- Keep `android:usesCleartextTraffic="false"`.
+- Keep Capacitor `allowMixedContent: false`.
+- Use Android system picker for file import.
+
+## New Play Console Personal Accounts
+
+If this is a new personal Play Console account, Google may require closed
+testing with 12 testers for 14 days before production access. Plan this before
+launch.
+
+## Production Readiness
+
+Internal Testing: ready after Play Console app, signing, subscription, and privacy URL are configured.
+
+Production: not ready until the privacy URL/support email are live, release
+signing is secured, Play Console review forms are complete, subscription tests
+pass, and ideally backend purchase-token validation is implemented.

@@ -6,8 +6,12 @@
   "scripts": {
     "test": "node tests/rsvp-engine.test.js",
     "prepare:www": "node scripts/copy-jszip.js",
-    "sync": "npm run prepare:www && npx cap sync android",
-    "build:android": "npm run prepare:www && npx cap sync android && cd android && ./gradlew assembleDebug"
+    "sync": "npm run android:sync",
+    "android:sync": "npm run prepare:www && npx cap sync android",
+    "android:debug": "npm run android:sync && cd android && gradlew assembleDebug",
+    "android:bundle": "npm run android:sync && cd android && gradlew bundleRelease",
+    "android:open": "npx cap open android",
+    "build:android": "npm run android:debug"
   },
   "dependencies": {
     "@capacitor/android": "^8.0.0",
