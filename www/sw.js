@@ -2,7 +2,7 @@
 // La app es 100% local (sin llamadas a servidores), así que la estrategia
 // es cache-first: una vez cacheado, todo carga instantáneo y sin red.
 
-const CACHE_NAME = 'rez-lector-v6';
+const CACHE_NAME = 'rez-lector-v8';
 const CORE_ASSETS = [
   './',
   './index.html',

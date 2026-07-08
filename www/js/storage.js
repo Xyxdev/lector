@@ -203,21 +203,25 @@ const Storage = {
     } catch (e) { /* almacenamiento no disponible, se ignora */ }
   },
 
-  // ---- Premium (desbloqueo de pago único, $5) ----
-  // NOTA IMPORTANTE: esto es una simulación local del desbloqueo, NO un
-  // cobro real. No hay integración con Google Play Billing todavía.
-  // setPremium(true) marca la app como desbloqueada en este dispositivo.
-  // Cuando se conecte Billing real, el único cambio necesario es llamar
-  // a setPremium(true) recién después de que Google confirme la compra
-  // (en vez de hacerlo inmediatamente al tocar "comprar").
+  // ---- Premium / entitlement cache ----
+  // El estado local es solo cache. La fuente de verdad debe ser Google Play
+  // Billing, y en produccion seria conviene validar purchaseToken en backend
+  // con Google Play Developer API.
   isPremium() {
-    return this.getPrefs().premium === true;
+    const prefs = this.getPrefs();
+    return prefs.premium === true && prefs.premiumSource === 'google_play';
   },
 
-  setPremium(value) {
+  setPremium(value, source = 'local_cache') {
     const prefs = this.getPrefs();
     prefs.premium = !!value;
+    prefs.premiumSource = source;
+    prefs.premiumCheckedAt = Date.now();
     this.setPrefs(prefs);
+  },
+
+  setPremiumFromBilling(value) {
+    this.setPremium(!!value, 'google_play');
   },
 };
 

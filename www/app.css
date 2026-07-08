@@ -2362,6 +2362,38 @@ input:checked + .slider-pill:before {
   min-height: 50px;
 }
 
+.premiumRestoreBtn,
+.premiumManageBtn {
+  width: 100%;
+  min-height: 44px;
+  margin-bottom: 8px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg-soft);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.premiumStatus {
+  min-height: 18px;
+  margin-top: 8px;
+  color: var(--ink-faint);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  line-height: 1.45;
+  text-align: center;
+}
+
+.premiumStatus.error { color: var(--danger); }
+.premiumStatus.warning { color: var(--premium); }
+.premiumStatus.success { color: var(--accent); }
+.premiumStatus.loading { color: var(--ink-dim); }
+
 .premiumCloseBtn {
   width: 100%;
 }
@@ -2582,17 +2614,7 @@ html[data-theme="dark"] #wordPivot {
   }
 
   .reader-screen.landscape-mode .stage::before {
-    content: "" !important;
-    position: absolute !important;
-    top: 18% !important;
-    bottom: 18% !important;
-    left: 50% !important;
-    width: 1px !important;
-    height: auto !important;
-    background: linear-gradient(180deg, transparent, var(--accent), transparent) !important;
-    opacity: .55 !important;
-    transform: translateX(-50%) !important;
-    pointer-events: none !important;
+    display: none !important;
   }
 
   .reader-screen.landscape-mode .wordrow {

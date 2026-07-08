@@ -77,13 +77,22 @@ function initAboutButton() {
   document.getElementById('aboutBtn').addEventListener('click', () => About.show());
 }
 
+function initPremiumStateListener() {
+  document.addEventListener('premiumchange', () => {
+    Library.render();
+    if (Reader.isOpen && Reader.isOpen()) Reader.refreshTexts();
+  });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   if (window.Theme) Theme.init();
+  if (window.Billing) Billing.init().catch(() => {});
   I18N.init();
   Reader.init(goToLibrary);
   Library.init(goToReader);
   initLangSwitch();
   initAboutButton();
+  initPremiumStateListener();
   initBackNavigation();
   // Anuncio de pantalla completa al abrir la app (placeholder visual, sin
   // SDK real conectado todavía). Se muestra una sola vez por sesión, no
