@@ -146,7 +146,7 @@ The repo ignores `keystore.properties`, `.jks`, and `.keystore` files.
 ## Production Notes
 
 - Publish `PRIVACY_POLICY.md` at a public HTTPS URL.
-- Support email is `sramirezerer@gmail.com`.
+- Support email is `ssuerx.u@gmail.com`.
 - Configure Play Console subscription `premium_monthly`.
 - Configure release signing locally or in CI without committing secrets.
 - Add backend purchase-token validation before scaling production usage.

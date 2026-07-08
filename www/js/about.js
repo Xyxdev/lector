@@ -2,7 +2,7 @@
 
 const About = (() => {
   const APP_VERSION = '1.0.0';
-  const SUPPORT_EMAIL = 'sramirezerer@gmail.com';
+  const SUPPORT_EMAIL = 'ssuerx.u@gmail.com';
 
   const PRIVACY_TEXT = {
     en: [

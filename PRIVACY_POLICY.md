@@ -81,7 +81,7 @@ If Rez Lector changes how data is handled, this policy will be updated.
 
 For privacy or support questions, contact:
 
-`sramirezerer@gmail.com`
+`ssuerx.u@gmail.com`
 
 ---
 
@@ -164,4 +164,4 @@ Si Rez Lector cambia el manejo de datos, esta politica se actualizara.
 
 Para consultas de privacidad o soporte:
 
-`sramirezerer@gmail.com`
+`ssuerx.u@gmail.com`

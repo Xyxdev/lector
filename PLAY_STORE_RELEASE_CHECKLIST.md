@@ -86,7 +86,7 @@ shown on the account.
 
 - Internal Testing purchase/restore/cancel flows pass.
 - Privacy Policy URL is live.
-- Support email is `sramirezerer@gmail.com`.
+- Support email is `ssuerx.u@gmail.com`.
 - Data Safety matches the app behavior.
 - Content Rating is complete.
 - App Access is complete.
