@@ -88,7 +88,7 @@ const I18N = (() => {
       premiumRestoreEmpty: 'No active subscription was found.',
       premiumPurchaseCancelled: 'Purchase was cancelled or not completed.',
       premiumBillingUnavailable: 'Google Play Billing is available only in the Android app installed from Google Play.',
-      premiumDisclaimer: 'Premium is verified with Google Play Billing. Local storage is only a cache; production builds should validate purchase tokens on a backend.',
+      premiumDisclaimer: 'Premium must be verified by Google Play in the Android app. Local storage is only a cache; production builds should validate entitlement on a backend.',
 
       interstitialLabel: 'Advertisement',
       interstitialClose: 'Close',
@@ -182,7 +182,7 @@ const I18N = (() => {
       premiumRestoreEmpty: 'No se encontró una suscripción activa.',
       premiumPurchaseCancelled: 'La compra fue cancelada o no se completó.',
       premiumBillingUnavailable: 'Google Play Billing solo está disponible en la app Android instalada desde Google Play.',
-      premiumDisclaimer: 'Premium se verifica con Google Play Billing. El almacenamiento local es solo cache; en producción conviene validar purchase tokens en un backend.',
+      premiumDisclaimer: 'Premium debe verificarse con Google Play en la app Android. El almacenamiento local es solo cache; en producción conviene validar el acceso en un backend.',
 
       interstitialLabel: 'Publicidad',
       interstitialClose: 'Cerrar',

@@ -1,6 +1,6 @@
-// premium.js - Paywall wired to Google Play Billing through Billing.
-// No local bypass: premium is unlocked only after Billing confirms an active
-// Google Play subscription. Storage keeps cache only for UX.
+// premium.js - Paywall shell.
+// No local bypass: this web bundle does not unlock premium by itself. The
+// Android Google Play integration must provide entitlement before release.
 
 const Premium = (() => {
   let onUnlocked = null;
@@ -36,14 +36,6 @@ const Premium = (() => {
   }
 
   function priceCopy() {
-    if (!window.Billing) return I18N.t('premiumPriceLoading');
-    const status = Billing.getStatus();
-    if (status.productDetails && status.productDetails.formattedPrice) {
-      return I18N.t('premiumPriceSubscription', {
-        price: status.productDetails.formattedPrice,
-        period: status.productDetails.billingPeriod || I18N.t('premiumMonthlyPeriod'),
-      });
-    }
     return I18N.t('premiumPriceLoading');
   }
 
@@ -87,58 +79,19 @@ const Premium = (() => {
   }
 
   async function refreshPrice() {
-    if (!window.Billing) return;
-    try {
-      await Billing.loadProductDetails();
-      const price = document.getElementById('premiumPrice');
-      if (price) price.textContent = priceCopy();
-      const status = Billing.getStatus();
-      if (!status.available) statusText(status.message, 'warning');
-    } catch (e) {
-      statusText(I18N.t('premiumBillingUnavailable'), 'warning');
-    }
+    statusText(I18N.t('premiumBillingUnavailable'), 'warning');
   }
 
   async function buy() {
-    if (!window.Billing) {
-      statusText(I18N.t('premiumBillingUnavailable'), 'error');
-      return;
-    }
-    setBusy(true);
-    statusText(I18N.t('premiumProcessing'), 'loading');
-    const result = await Billing.purchasePremium();
-    setBusy(false);
-    if (result.premium) {
-      Haptics.medium();
-      statusText(I18N.t('premiumSuccess'), 'success');
-      if (onUnlocked) onUnlocked();
-      setTimeout(close, 450);
-    } else {
-      statusText(result.error || result.message || I18N.t('premiumPurchaseCancelled'), 'error');
-    }
+    statusText(I18N.t('premiumBillingUnavailable'), 'error');
   }
 
   async function restore() {
-    if (!window.Billing) {
-      statusText(I18N.t('premiumBillingUnavailable'), 'error');
-      return;
-    }
-    setBusy(true);
-    statusText(I18N.t('premiumRestoring'), 'loading');
-    const result = await Billing.restorePurchases();
-    setBusy(false);
-    if (result.premium) {
-      statusText(I18N.t('premiumRestoreSuccess'), 'success');
-      if (onUnlocked) onUnlocked();
-      setTimeout(close, 450);
-    } else {
-      statusText(result.message || I18N.t('premiumRestoreEmpty'), 'warning');
-    }
+    statusText(I18N.t('premiumBillingUnavailable'), 'warning');
   }
 
   async function manage() {
-    if (!window.Billing) return;
-    await Billing.openManageSubscriptions();
+    window.open('https://play.google.com/store/account/subscriptions', '_blank', 'noopener');
   }
 
   function show(unlockedCallback) {

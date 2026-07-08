@@ -1,6 +1,6 @@
 # Google Play Billing Setup
 
-This project is currently a vanilla HTML/CSS/JavaScript app packaged with Capacitor 8. There is no committed `android/` Gradle project yet, so the web layer is ready for Billing and expects a native Capacitor plugin named `GooglePlayBilling`.
+This project is currently a vanilla HTML/CSS/JavaScript app packaged with Capacitor 8. There is no committed `android/` Gradle project yet. The APK source does not ship a JavaScript Billing bridge until the native Capacitor plugin exists, because Windows Defender flagged the temporary web bridge inside debug APK artifacts.
 
 ## Product ID
 
@@ -10,23 +10,12 @@ The subscription Product ID used by the app is:
 premium_monthly
 ```
 
-Change it in:
-
-```text
-www/js/billing.js
-```
-
-Look for:
-
-```js
-const BILLING_PREMIUM_PRODUCT_ID = 'premium_monthly';
-```
+When the native plugin is integrated, keep the same ID in the Android plugin/template and any bridge code you add.
 
 ## Current App Integration
 
-The web app now calls `Billing` instead of trusting local storage:
+The paywall is prepared to call a global `Billing` bridge when it exists. Until the native plugin is installed, it shows a clear "Google Play Billing unavailable" message instead of unlocking premium locally.
 
-- `Billing.init()` runs on app start.
 - `Billing.refreshEntitlement()` queries active Google Play purchases.
 - `Billing.purchasePremium()` launches the purchase flow.
 - `Billing.restorePurchases()` restores active subscriptions.

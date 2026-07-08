@@ -86,7 +86,6 @@ function initPremiumStateListener() {
 
 document.addEventListener('DOMContentLoaded', () => {
   if (window.Theme) Theme.init();
-  if (window.Billing) Billing.init().catch(() => {});
   I18N.init();
   Reader.init(goToLibrary);
   Library.init(goToReader);

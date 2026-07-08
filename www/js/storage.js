@@ -205,8 +205,7 @@ const Storage = {
 
   // ---- Premium / entitlement cache ----
   // El estado local es solo cache. La fuente de verdad debe ser Google Play
-  // Billing, y en produccion seria conviene validar purchaseToken en backend
-  // con Google Play Developer API.
+  // Billing; la validacion fuerte para produccion debe vivir en backend.
   isPremium() {
     const prefs = this.getPrefs();
     return prefs.premium === true && prefs.premiumSource === 'google_play';
