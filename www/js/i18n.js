@@ -16,7 +16,6 @@ const I18N = (() => {
       addBookAria: 'Add book',
       emptyTitle: 'Read at the speed of your mind',
       emptySub: 'Upload an .epub or .txt and the app shows it to you one word at a time, right where your eyes are looking, at a pace that adjusts itself.',
-      adPlaceholder: 'Ad space',
       streaksDays: 'day streak',
       wordsRead: 'words read',
       minutes: 'minutes',
@@ -69,8 +68,8 @@ const I18N = (() => {
       premiumFeature3Sub: 'More than {max} books saved at once.',
       premiumFeature4Title: 'Stats and streaks',
       premiumFeature4Sub: 'Track your progress day by day, with no restrictions.',
-      premiumFeature5Title: 'No ads',
-      premiumFeature5Sub: 'A clean reading experience, with no interruptions.',
+      premiumFeature5Title: 'Focus mode',
+      premiumFeature5Sub: 'A clean reading experience designed for fewer interruptions.',
       premiumPriceOneTime: 'monthly subscription',
       premiumPriceNote: 'Renews automatically through Google Play',
       premiumPriceLoading: 'Loading price...',
@@ -95,7 +94,6 @@ const I18N = (() => {
       premiumBillingUnavailable: 'Google Play Billing is available only in the Android app installed from Google Play.',
       premiumDisclaimer: 'Premium must be verified by Google Play in the Android app. Local storage is only a cache; production builds should validate entitlement on a backend.',
 
-      interstitialLabel: 'Advertisement',
       interstitialClose: 'Close',
 
       aboutAria: 'About & privacy',
@@ -115,7 +113,6 @@ const I18N = (() => {
       addBookAria: 'Agregar libro',
       emptyTitle: 'Lee a la velocidad de tu mente',
       emptySub: 'Sube un .epub o .txt y la app te lo muestra palabra por palabra, en el centro de la mirada, a un ritmo que se ajusta solo.',
-      adPlaceholder: 'Espacio publicitario',
       streaksDays: 'días seguidos',
       wordsRead: 'palabras leídas',
       minutes: 'minutos',
@@ -168,8 +165,8 @@ const I18N = (() => {
       premiumFeature3Sub: 'Más de {max} libros guardados a la vez.',
       premiumFeature4Title: 'Estadísticas y racha',
       premiumFeature4Sub: 'Seguí tu progreso día a día, sin restricciones.',
-      premiumFeature5Title: 'Sin anuncios',
-      premiumFeature5Sub: 'Una experiencia de lectura limpia, sin interrupciones.',
+      premiumFeature5Title: 'Modo enfoque',
+      premiumFeature5Sub: 'Una experiencia de lectura limpia y con menos interrupciones.',
       premiumPriceOneTime: 'suscripción mensual',
       premiumPriceNote: 'Se renueva automáticamente por Google Play',
       premiumPriceLoading: 'Cargando precio...',
@@ -194,7 +191,6 @@ const I18N = (() => {
       premiumBillingUnavailable: 'Google Play Billing solo está disponible en la app Android instalada desde Google Play.',
       premiumDisclaimer: 'Premium debe verificarse con Google Play en la app Android. El almacenamiento local es solo cache; en producción conviene validar el acceso en un backend.',
 
-      interstitialLabel: 'Publicidad',
       interstitialClose: 'Cerrar',
 
       aboutAria: 'Acerca de y privacidad',

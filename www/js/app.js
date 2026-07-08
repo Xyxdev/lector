@@ -94,8 +94,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initAboutButton();
   initPremiumStateListener();
   initBackNavigation();
-  // Anuncio de pantalla completa al abrir la app (placeholder visual, sin
-  // SDK real conectado todavía). Se muestra una sola vez por sesión, no
-  // en cada vez que se vuelve a la biblioteca.
+  // No-op in production: the app does not include an advertising SDK or fake ads.
   Ads.showInterstitialOnOpen();
 });

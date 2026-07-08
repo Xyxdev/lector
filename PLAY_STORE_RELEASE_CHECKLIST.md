@@ -1,90 +1,95 @@
 # Play Store Release Checklist
 
-## Local Build
+## 1. Local Setup
 
-- Run `npm install`.
-- Run `npm test`.
-- Run `npm run android:sync`.
-- Run `npm run android:debug`.
-- Configure release signing locally.
-- Run `npm run android:bundle`.
-- Confirm package name is `com.rezlector.app`.
-- Confirm visible app name is `Rez Lector`.
-- Confirm `versionCode 1` and `versionName 1.0.0` for the first release.
-- Confirm `minSdk 24`, `compileSdk 36`, and `targetSdk 36`.
+- Install Node dependencies: `npm install`.
+- Install Android Studio or a JDK 17/21 compatible with Android Gradle Plugin.
+- Confirm Java is modern enough: `java -version`.
+- Run app tests: `npm test`.
+- Sync Capacitor: `npm run android:sync`.
+- Build debug APK: `npm run android:debug`.
 
-## Release Signing
+## 2. Release Signing
 
-- Create a local release keystore with `keytool`.
-- Create `android/keystore.properties` locally.
-- Never commit `.jks`, `.keystore`, `keystore.properties`, service accounts, tokens, or passwords.
-- Store release credentials in a secure password manager.
+- Create a local release keystore:
 
-## Play Console App Setup
+```powershell
+keytool -genkeypair -v -keystore rez-lector-release.jks -alias rezlector -keyalg RSA -keysize 2048 -validity 10000
+```
 
-- Create the Android app in Play Console.
+- Create `android/keystore.properties` locally:
+
+```properties
+storeFile=../rez-lector-release.jks
+storePassword=TU_PASSWORD
+keyAlias=rezlector
+keyPassword=TU_PASSWORD
+```
+
+- Keep `.jks`, `.keystore`, and `keystore.properties` out of git.
+- Generate release AAB: `npm run android:bundle`.
+- AAB output: `android/app/build/outputs/bundle/release/app-release.aab`.
+
+## 3. Play Console App
+
+- Create or finish Play Console account setup.
+- Complete identity verification and Google Payments Profile if Google requires it.
+- Create the app in Play Console.
 - Package name: `com.rezlector.app`.
-- Upload app icon and feature graphic.
-- Add phone screenshots and tablet screenshots if required.
-- Add short description and full description.
-- Add public privacy policy URL.
+- App name: `Rez Lector`.
+- Upload icon, feature graphic, screenshots, short description, and full description.
+- Publish `PRIVACY_POLICY.md` on a public HTTPS URL and paste it in Play Console.
 - Complete Content Rating.
-- Complete Data Safety.
-- Declare no real ads until an ad SDK is actually integrated.
-- Declare Google Play Billing subscription for digital Premium features.
+- Complete App Access. The app has no login or restricted account area.
+- Complete Data Safety:
+  - No analytics SDKs.
+  - No tracking SDKs.
+  - No real advertising SDKs.
+  - No cloud sync.
+  - Books/progress/preferences/stats are stored locally.
+  - Google Play Billing handles the monthly Premium subscription.
+  - The app may receive `productId`, `purchaseToken`, `packageName`, and subscription status.
 
-## Subscription Setup
+## 4. Subscription
 
 - Go to Monetize > Products > Subscriptions.
 - Create Product ID `premium_monthly`.
 - Create a monthly base plan.
-- Configure price, countries, and renewal terms.
+- Configure countries and price.
 - Activate the subscription and base plan.
-- Confirm the product is active before purchase tests.
+- Add license testers in Play Console.
+- Make sure testers install from Google Play Internal Testing, not from a side-loaded APK, when testing real Billing.
 
-## Internal Testing
+## 5. Internal Testing
 
-- Upload the signed AAB to Internal Testing.
+- Upload signed AAB to Internal Testing.
 - Add tester Gmail accounts.
 - Publish the internal test release.
-- Open the opt-in link with a tester account.
-- Install from Google Play, not by side-loading, for real Billing tests.
+- Share the opt-in link.
+- Install the app from the opt-in link with a tester account.
 - Test user without Premium.
 - Test successful purchase.
-- Test user-cancelled purchase.
-- Test pending purchase if available in your test setup.
+- Test cancelled purchase.
+- Test pending purchase where available.
 - Test restore purchase.
-- Cancel subscription from Google Play and verify Premium is removed when Google reports no active subscription.
-- Confirm ad placeholders are hidden for Premium.
+- Cancel subscription in Google Play and verify Premium is removed when Google reports no active subscription.
 - Confirm Premium unlocks more books, speed above 250 ppm, 2-3 word grouping, stats, and accent colors.
+- Confirm no fake ad banners or fake interstitials appear.
 
-## Privacy And Data Safety
+## 6. New Personal Play Console Accounts
 
-- Publish `PRIVACY_POLICY.md` at a public HTTPS URL.
-- Replace the TODO support email before production.
-- Data Safety should match the app: no analytics, no tracking SDKs, no real ads, local book storage only, Google Play Billing for purchases.
-- Explain that Google Play processes payments and the app may receive `productId`, `purchaseToken`, and `packageName`.
-- Confirm no external payment links or external subscription purchase flows exist.
+New personal Play Console accounts may need closed testing with 12 testers for
+14 days before production access. Follow the current Play Console requirement
+shown on the account.
 
-## Manifest And Permissions
+## 7. Production Checklist
 
-- Keep `INTERNET` for Billing/web support.
-- Keep `VIBRATE` only because the app uses tap feedback.
-- Do not add storage, location, camera, microphone, contacts, or dangerous permissions.
-- Keep `android:usesCleartextTraffic="false"`.
-- Keep Capacitor `allowMixedContent: false`.
-- Use Android system picker for file import.
-
-## New Play Console Personal Accounts
-
-If this is a new personal Play Console account, Google may require closed
-testing with 12 testers for 14 days before production access. Plan this before
-launch.
-
-## Production Readiness
-
-Internal Testing: ready after Play Console app, signing, subscription, and privacy URL are configured.
-
-Production: not ready until the privacy URL/support email are live, release
-signing is secured, Play Console review forms are complete, subscription tests
-pass, and ideally backend purchase-token validation is implemented.
+- Internal Testing purchase/restore/cancel flows pass.
+- Privacy Policy URL is live.
+- Support email is `sramirezerer@gmail.com`.
+- Data Safety matches the app behavior.
+- Content Rating is complete.
+- App Access is complete.
+- Subscription `premium_monthly` is active.
+- Release signing credentials are stored securely outside git.
+- Version code is increased for every future Play upload.

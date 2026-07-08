@@ -143,10 +143,10 @@ The repo ignores `keystore.properties`, `.jks`, and `.keystore` files.
 9. Confirm the paywall loads the Google Play price.
 10. Test purchase success, cancellation, restore, pending state, and no-premium state.
 
-## Known Production TODO
+## Production Notes
 
 - Publish `PRIVACY_POLICY.md` at a public HTTPS URL.
-- Add a real support email to the privacy policy.
+- Support email is `sramirezerer@gmail.com`.
 - Configure Play Console subscription `premium_monthly`.
 - Configure release signing locally or in CI without committing secrets.
 - Add backend purchase-token validation before scaling production usage.

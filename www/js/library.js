@@ -7,7 +7,7 @@ const Library = (() => {
 
   function cacheEls() {
     ['libraryScreen', 'libraryStatus', 'libraryEmpty', 'shelf', 'addBookBtn', 'fileInput',
-     'statsArea', 'streakPill', 'streakValue', 'libraryAdSlot']
+     'statsArea', 'streakPill', 'streakValue']
       .forEach(id => els[id] = document.getElementById(id));
   }
 
@@ -103,7 +103,6 @@ const Library = (() => {
     if (books.length === 0) {
       els.libraryEmpty.classList.remove('hidden');
       els.shelf.classList.add('hidden');
-      els.libraryAdSlot.classList.add('hidden');
       return;
     }
     els.libraryEmpty.classList.add('hidden');
@@ -161,7 +160,6 @@ const Library = (() => {
       els.shelf.appendChild(card);
     });
 
-    els.libraryAdSlot.classList.toggle('hidden', premium);
   }
 
   function confirmDelete(id, title) {

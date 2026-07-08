@@ -24,8 +24,7 @@ const Reader = (() => {
      'playBtn', 'prevBtn', 'nextBtn', 'sentenceBackBtn',
      'ppmSlider', 'ppmValue', 'adaptiveToggle', 'liveRate',
      'resumeBanner', 'resumeText', 'resumeBtn', 'restartBtn',
-     'savedBadge', 'finishedBadge', 'sliderLockOverlay', 'speedCapNote',
-     'readerAdSlot']
+     'savedBadge', 'finishedBadge', 'sliderLockOverlay', 'speedCapNote']
       .forEach(id => els[id] = document.getElementById(id));
   }
 
@@ -181,8 +180,6 @@ const Reader = (() => {
     const premium = Storage.isPremium();
     const cap = FREE_LIMITS.MAX_PPM;
     const maxSlider = parseInt(els.ppmSlider.max, 10);
-
-    els.readerAdSlot.classList.toggle('hidden', premium);
 
     // Tope real de reproducción: si no es premium, ni el modo adaptativo
     // puede empujar el ritmo efectivo por encima del límite gratis.
