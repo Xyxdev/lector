@@ -27,6 +27,9 @@ jobs:
       - name: Install npm dependencies
         run: npm install
 
+      - name: Prepare web vendor files
+        run: npm run prepare:www
+
       - name: Add Android platform (if missing)
         run: if [ ! -d "./android" ]; then npx cap add android; fi
 

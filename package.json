@@ -5,12 +5,14 @@
   "private": true,
   "scripts": {
     "test": "node tests/rsvp-engine.test.js",
-    "sync": "npx cap sync android",
-    "build:android": "npx cap sync android && cd android && ./gradlew assembleDebug"
+    "prepare:www": "node scripts/copy-jszip.js",
+    "sync": "npm run prepare:www && npx cap sync android",
+    "build:android": "npm run prepare:www && npx cap sync android && cd android && ./gradlew assembleDebug"
   },
   "dependencies": {
     "@capacitor/android": "^8.0.0",
-    "@capacitor/core": "^8.0.0"
+    "@capacitor/core": "^8.0.0",
+    "jszip": "^3.10.1"
   },
   "devDependencies": {
     "@capacitor/cli": "^8.0.0",

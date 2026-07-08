@@ -1,5 +1,6 @@
 # Dependencias (se reinstalan con npm install)
 node_modules/
+www/lib/jszip.min.js
 
 # Proyecto nativo de Android: se regenera desde cero en cada build de CI
 # (ver .github/workflows/build-android.yml), no necesita vivir en el repo.
