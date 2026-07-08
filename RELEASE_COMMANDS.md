@@ -11,6 +11,15 @@ keytool -genkeypair -v -keystore rez-lector-release.jks -alias rezlector -keyalg
 npm run android:bundle
 ```
 
+Use JDK 17 or 21. Confirm PowerShell is using it before building:
+
+```powershell
+java -version
+$env:JAVA_HOME="C:\Program Files\Eclipse Adoptium\jdk-21"
+$env:Path="$env:JAVA_HOME\bin;$env:Path"
+java -version
+```
+
 The release AAB is generated at:
 
 ```text
@@ -36,3 +45,6 @@ java -version
 npm run android:debug
 npm run android:bundle
 ```
+
+If `npm run android:bundle` fails with "Release signing is not configured",
+create the local keystore and `android/keystore.properties` shown above.

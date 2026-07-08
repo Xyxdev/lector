@@ -65,6 +65,22 @@ dependencies {
 
 apply from: 'capacitor.build.gradle'
 
+afterEvaluate {
+    tasks.matching { task ->
+        task.name == 'bundleRelease' || task.name == 'assembleRelease'
+    }.configureEach { task ->
+        task.doFirst {
+            if (!keystorePropertiesFile.exists()) {
+                throw new GradleException(
+                    "Release signing is not configured. Create android/keystore.properties " +
+                    "and a local .jks/.keystore file before running ${task.name}. " +
+                    "See RELEASE_COMMANDS.md. Do not commit signing secrets."
+                )
+            }
+        }
+    }
+}
+
 try {
     def servicesJSON = file('google-services.json')
     if (servicesJSON.text) {

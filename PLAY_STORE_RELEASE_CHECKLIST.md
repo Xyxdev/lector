@@ -5,6 +5,7 @@
 - Install Node dependencies: `npm install`.
 - Install Android Studio or a JDK 17/21 compatible with Android Gradle Plugin.
 - Confirm Java is modern enough: `java -version`.
+- Configure `JAVA_HOME` so Gradle uses JDK 17/21, not Java 8.
 - Run app tests: `npm test`.
 - Sync Capacitor: `npm run android:sync`.
 - Build debug APK: `npm run android:debug`.
@@ -27,6 +28,7 @@ keyPassword=TU_PASSWORD
 ```
 
 - Keep `.jks`, `.keystore`, and `keystore.properties` out of git.
+- `npm run android:bundle` intentionally fails with a clear message if `android/keystore.properties` is missing.
 - Generate release AAB: `npm run android:bundle`.
 - AAB output: `android/app/build/outputs/bundle/release/app-release.aab`.
 
